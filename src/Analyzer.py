@@ -5,11 +5,8 @@ class Analyzer:
         self.formula = formula
     
     def isFormula(self) -> bool:
-        if not (RegExp.search(r"[\(\)]", self.formula)):
+        match = RegExp.search(r"[^a-z\(\) #&>-]", self.formula)
+        if match:
             return False
-        else:
-            match = RegExp.search(r"[^a-z\(\)#&>-]", self.formula)
-            if match:
-                return False
-            return True
+        return True
 
