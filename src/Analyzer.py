@@ -1,66 +1,98 @@
-import re as RegExp
+import string 
+
+# Alphabet
+atoms = list(string.ascii_lowercase)
+operatores = ['#', '>', '&', '-'] 
+delimiters = ['(', ')']
+
 
 class Analyzer:
-    def __init__(self, formula: str):
-        self.formula = formula
-        self.formula = self.Formatting()
+    # Removing blank spaces
+    def format(self, formula) -> str:
+        return formula.replace(" ", "")
+
+    # Looking for minors issues
+    def lexerAnalyzer(self, formula) -> bool:
+        open = close = 0
+
+        if len(formula) == 1 and formula[0] in operatores:
+            return False
+        elif len(formula) == 1 and formula[0] in delimiters:
+            return False
+
+        tokens = []
+
+        for i in formula:
+            if i == '(':
+                open += 1
+            if i == ')':
+                close += 1
+            tokens.append(i)
+
+        if open != close:
+            return False
     
-    def Formatting(self) -> str:
-        self.formula = self.formula.replace(" ", "")
-        if len(self.formula) % 2 == 1:
-            self.formula = ''.join((self.formula, ')'))
-        return self.formula
+        flag = False # flag is a var to check if there's an atoms in formula
+        for token in tokens:
+            if token in atoms:
+                flag = True
 
-    def isFormula(self):
-        print(self.CheckFormula(self.formula))
-        if len(self.formula % 2 == 1):
-            self.formula = self.formula[0:len(self.formula)] 
+            if not token in atoms and not token in operatores and not token in delimiters:
+                return False
+        return (True and flag)
 
-    def Cases(self, string: str, state: list): 
-        for i in range(len(string)):
-            if RegExp.search(r"[a-z]", string[i]): # case i -> atom
-                if RegExp.search(r"[\)#&>-", string[i+1]):
-                    print(1)
-                    state[0] = True
-                else:
-                    state[0] = False
-            elif string[i] == '(': 
-                if RegExp.search(r"[a-z]", string[i+1]) or RegExp.search(r"[\(]", string[i+1]):
-                    state[0] = True
-                else:
-                    state[0] = False
-            elif string[i] == ')':
-                print(3)
-                if RegExp.search(r"[#&>-]", string[i+1]) or RegExp.search(r"[\)]", string[i+1]):
-                    state[0] = True
-                else:
-                    state[0] = False
+    # Check majors issues
+    def Verify(self, curr, next, prev = '-'):
+        if curr == '-':
+            if prev in atoms:
+                return False
+
+            if not (next in atoms or next == '-' or next == '('):
+                return False
+
+        elif curr == '(':
+            if not (next in atoms or next == '(' or next == '-'):
+               return False  
+        elif curr in atoms:
+            if not (next in operatores or next == ')'):
+                return False
+        elif curr in operatores:
+            if not (next in atoms or next == '(' or next == '-'):
+                return False
+        else:
+            if not (next == ')' or next in operatores):
+                return False
+        return True
+
+
+    def semanticAnalyzer(self, formula) -> bool:
+        formula = self.format(formula)
+        response = self.lexerAnalyzer(formula)
+        state = True
+
+        if response:
+            if formula[-1] in operatores: # if there's an operator in last position
+                return False
+
+            if formula[0] == '(':
+                if formula[-1] != ')':
+                    return False
             else:
-                print(4)
-                if RegExp.search(r"[a-z]", string[i+1]) or RegExp.search(r"[\(]", string[i+1]):
-                    state[0] = True
+                if formula[-1] == ')':
+                    return False
+
+     
+            for i in range(0, len(formula) - 1):
+                if i == 0:
+                    state = self.Verify(formula[i], formula[i+1])
                 else:
-                    state[0] = False
-         
+                    state = self.Verify(formula[i], formula[i+1], formula[i-1])
 
-    def CheckAtoms(self, left: str, right: str):
-        left_state = right_state = [False]
-        
-        for _ in range(len(left)):
-            self.Cases(left, left_state)
+                if state == False:
+                    break
+            return state
+        else:
+            return False
 
-        for _ in range(len(right)):
-            self.Cases(right, right_state)
-
-        return left_state[0] and right_state[0]
-
-    def CheckFormula(self, formula: str):
-        if len(formula) == 2:
-            return formula
-        
-        mid = int(len(formula)/2)
-        left = self.CheckFormula(formula[:mid])
-        right = self.CheckFormula(formula[mid:])
-
-        return self.CheckAtoms(left, right)
-
+    def isFormula(self, formula) -> bool:
+        return self.semanticAnalyzer(formula)
