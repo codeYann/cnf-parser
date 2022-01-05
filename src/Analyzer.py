@@ -12,8 +12,8 @@ class Analyzer:
         return formula.replace(" ", "")
 
     # Looking for minors issues
-    def lexerAnalyzer(self, formula) -> bool:
-        open = close = 0
+    def lexerAnalyzer(self, formula):
+        open_p = close_p = 0
 
         if len(formula) == 1 and formula[0] in operatores:
             return False
@@ -21,16 +21,18 @@ class Analyzer:
             return False
 
         tokens = []
+        paranteses_state = True
 
         for i in formula:
             if i == '(':
-                open += 1
+                open_p += 1
             if i == ')':
-                close += 1
+                close_p += 1
             tokens.append(i)
 
-        if open != close:
-            return False
+        if open_p != close_p:
+            paranteses_state = False
+            return False, paranteses_state
     
         flag = False # flag is a var to check if there's an atoms in formula
         for token in tokens:
@@ -38,8 +40,8 @@ class Analyzer:
                 flag = True
 
             if not token in atoms and not token in operatores and not token in delimiters:
-                return False
-        return (True and flag)
+                return False, paranteses_state
+        return flag, paranteses_state
 
     # Check majors issues
     def Verify(self, curr, next, prev = '-'):
@@ -67,21 +69,20 @@ class Analyzer:
 
     def semanticAnalyzer(self, formula) -> bool:
         formula = self.format(formula)
-        response = self.lexerAnalyzer(formula)
+        response, paranteses_state = self.lexerAnalyzer(formula)
         state = True
 
         if response:
             if formula[-1] in operatores: # if there's an operator in last position
                 return False
+            if paranteses_state == False:
+                if formula[0] == '(':
+                    if formula[-1] != ')':
+                        return False
+                else:
+                    if formula[-1] == ')':
+                        return False
 
-            if formula[0] == '(':
-                if formula[-1] != ')':
-                    return False
-            else:
-                if formula[-1] == ')':
-                    return False
-
-     
             for i in range(0, len(formula) - 1):
                 if i == 0:
                     state = self.Verify(formula[i], formula[i+1])
