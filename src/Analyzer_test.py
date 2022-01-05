@@ -43,4 +43,4 @@ formulas = [
 print("[T/F] | Formula\n--------|---------")
 
 for i in formulas:
-    print(f"{isFormula(i)}\t| {i}")
+    print(f"{is_formula(i)}\t| {i}")

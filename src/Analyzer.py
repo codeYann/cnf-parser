@@ -12,7 +12,7 @@ def format(formula) -> str:
 
 
 # Looking for minors issues
-def lexerAnalyzer(formula) -> tuple:
+def lexer_analyzer(formula) -> tuple:
     open_p = close_p = 0
 
     if len(formula) == 1 and formula[0] in operatores:
@@ -45,7 +45,7 @@ def lexerAnalyzer(formula) -> tuple:
 
 
 # Check majors issues
-def Verify(curr, next, prev="-") -> bool:
+def verify(curr, next, prev="-") -> bool:
     if curr == "-":
         if prev in atoms:
             return False
@@ -68,9 +68,9 @@ def Verify(curr, next, prev="-") -> bool:
     return True
 
 
-def semanticAnalyzer(formula) -> bool:
+def semantic_analyzer(formula) -> bool:
     formula = format(formula)
-    response, paranteses_state = lexerAnalyzer(formula)
+    response, paranteses_state = lexer_analyzer(formula)
     state = True
 
     if response:
@@ -86,9 +86,9 @@ def semanticAnalyzer(formula) -> bool:
 
         for i in range(0, len(formula) - 1):
             if i == 0:
-                state = Verify(formula[i], formula[i + 1])
+                state = verify(formula[i], formula[i + 1])
             else:
-                state = Verify(formula[i], formula[i + 1], formula[i - 1])
+                state = verify(formula[i], formula[i + 1], formula[i - 1])
 
             if state == False:
                 break
@@ -97,5 +97,5 @@ def semanticAnalyzer(formula) -> bool:
         return False
 
 
-def isFormula(formula) -> bool:
-    return semanticAnalyzer(formula)
+def is_formula(formula) -> bool:
+    return semantic_analyzer(formula)
