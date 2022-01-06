@@ -34,6 +34,18 @@ def get_subformula(formula: str, k: int) -> tuple:
     return idx_i, idx_f
 
 
+def external_idx_operator(formula: str) -> int:
+    count = k = count = 0
+    while k < len(formula):
+        if formula[k] == "(":
+            count += 1
+        elif formula[k] == ")":
+            count -= 1
+        elif count == 1 and formula[k] in linter.operatores:
+            return k
+        k += 1
+
+
 # redefinir implicações em termos de disjunção e negação [ok]
 def remove_implies(formula: str) -> str:
     formula = linter.format(add_brackets(formula))
@@ -95,3 +107,5 @@ def remove_double_neg(formula: str) -> str:
 
 
 # Distributividade de disjunção sobre conjunção []
+def distributive(formula: str) -> str:
+    pass
