@@ -1,4 +1,4 @@
-from Analyzer import *
+import Analyzer as linter
 
 formulas = [
     "--p",
@@ -43,4 +43,4 @@ formulas = [
 print("[T/F] | Formula\n--------|---------")
 
 for i in formulas:
-    print(f"{is_formula(i)}\t| {i}")
+    print(f"{linter.is_formula(i)}\t| {i}")
