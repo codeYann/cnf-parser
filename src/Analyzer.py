@@ -7,12 +7,12 @@ delimiters = ["(", ")"]
 
 
 # Removing blank spaces
-def format(formula) -> str:
+def format(formula: str) -> str:
     return formula.replace(" ", "")
 
 
 # Looking for minors issues
-def lexer_analyzer(formula) -> tuple:
+def lexer_analyzer(formula: str) -> tuple:
     open_p = close_p = 0
 
     if len(formula) == 1 and formula[0] in operatores:
@@ -68,7 +68,7 @@ def verify(curr, next, prev="-") -> bool:
     return True
 
 
-def semantic_analyzer(formula) -> bool:
+def semantic_analyzer(formula: str) -> bool:
     formula = format(formula)
     response, paranteses_state = lexer_analyzer(formula)
     state = True
@@ -97,5 +97,5 @@ def semantic_analyzer(formula) -> bool:
         return False
 
 
-def is_formula(formula) -> bool:
+def is_formula(formula: str) -> bool:
     return semantic_analyzer(formula)
