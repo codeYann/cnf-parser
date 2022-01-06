@@ -10,7 +10,7 @@ def add_brackets(formula: str) -> str:
     return formula
 
 
-def get_subformula(formula: str, k: int) -> tuple:
+def get_brackets_idx(formula: str, k: int) -> tuple:
     cont = 0
     i = k
     while cont != 1:
@@ -35,15 +35,19 @@ def get_subformula(formula: str, k: int) -> tuple:
 
 
 def external_idx_operator(formula: str) -> int:
-    count = k = count = 0
-    while k < len(formula):
+    count = 0
+    i = 0
+    for k in range(len(formula)):
         if formula[k] == "(":
             count += 1
         elif formula[k] == ")":
             count -= 1
-        elif count == 1 and formula[k] in linter.operatores:
-            return k
-        k += 1
+        elif count == 1 and (
+            formula[k] == ">" or formula[k] == "#" or formula[k] == "&"
+        ):
+            return i
+        i += 1
+    return None
 
 
 # redefinir implicações em termos de disjunção e negação [ok]
@@ -52,7 +56,7 @@ def remove_implies(formula: str) -> str:
     k = 0
     while ">" in formula:
         if formula[k] == ">":
-            idx_i, idx_f = get_subformula(formula, k)
+            idx_i, idx_f = get_brackets_idx(formula, k)
             formula = (
                 formula[:idx_i]
                 + "(-"
@@ -81,7 +85,7 @@ def push_negations(formula: str) -> str:
     k = 0
     while "-(" in formula:
         if formula[k] == "#" or formula[k] == "&":
-            idx_i, idx_f = get_subformula(formula, k)
+            idx_i, idx_f = get_brackets_idx(formula, k)
 
             if formula[idx_i - 1] == "-":
                 formula = switch_operatores(formula, idx_i, idx_f)
@@ -108,4 +112,30 @@ def remove_double_neg(formula: str) -> str:
 
 # Distributividade de disjunção sobre conjunção []
 def distributive(formula: str) -> str:
-    pass
+    while "#(" in formula or ")#" in formula:
+        idx = external_idx_operator(formula)
+        flag = False
+        if formula[idx] == "#":
+            slice = formula[idx + 1 : -1]
+            slice_idx = external_idx_operator(slice)
+            if slice_idx:
+                if slice[slice_idx] == "&":
+                    f1 = f3 = formula[1:idx]
+                    f2 = slice[1:slice_idx]
+                    f4 = slice[slice_idx + 1 : -1]
+                    flag = True
+
+            if not flag:
+                slice = formula[1:idx]
+                slice_idx = external_idx_operator(slice)
+                if slice_idx:
+                    if slice[slice_idx] == "&":
+                        f1 = slice[1:slice_idx]
+                        f2 = f4 = formula[idx + 1 : -1]
+                        f3 = slice[slice_idx + 1 : -1]
+                        flag = True
+        if flag:
+            formula = "((" + f1 + "#" + f2 + ")&(" + f3 + "#" + f4 + "))"
+            idx = external_idx_operator(formula)
+
+    return formula
