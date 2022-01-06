@@ -34,6 +34,7 @@ def get_subformula(formula: str, k: int) -> tuple:
     return idx_i, idx_f
 
 
+# redefinir implicações em termos de disjunção e negação [ok]
 def remove_implies(formula: str) -> str:
     formula = linter.format(add_brackets(formula))
     k = 0
@@ -63,15 +64,15 @@ def switch_operatores(formula: str, start: int, end: int) -> str:
     return "".join(formula)
 
 
+# Empurrar as negações para o interior por meio de De Morgan [ok]
 def push_negations(formula: str) -> str:
     k = 0
     while "-(" in formula:
         if formula[k] == "#" or formula[k] == "&":
             idx_i, idx_f = get_subformula(formula, k)
-            formula = switch_operatores(formula, idx_i, idx_f)
 
             if formula[idx_i - 1] == "-":
-                print(formula)
+                formula = switch_operatores(formula, idx_i, idx_f)
                 formula = (
                     formula[0 : idx_i - 1]
                     + formula[idx_i]
@@ -86,11 +87,11 @@ def push_negations(formula: str) -> str:
     return formula
 
 
+# Eliminar as duplas negações [ok]
 def remove_double_neg(formula: str) -> str:
     while "--" in formula:
         formula = formula.replace("--", "")
     return formula
 
 
-print("(((p>q)>p)>p)")
-print(remove_double_neg(push_negations(remove_implies("(((p>q)>p)>p)"))))
+# Distributividade de disjunção sobre conjunção []
