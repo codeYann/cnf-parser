@@ -10,25 +10,44 @@ def add_brackets(formula: str) -> str:
     return formula
 
 
-def remove_implications(formula: str):
-    formula = add_brackets(linter.format(formula))
-    print(formula)
-    formula = list(formula)
-
-    fnc = formula
-    i = 0
-
-    while ">" in formula:
-        if formula[i] == ">":
-            if formula[i - 1] in linter.atoms:
-                fnc[i] = "#"
-                fnc.insert(i - 1, "-")
-            else:
-                pass
+def get_subformula(formula: str, k: int) -> tuple:
+    cont = 0
+    i = k
+    while cont != 1:
         i += 1
-    return fnc
+        if formula[i] == ")":
+            cont += 1
+        elif formula[i] == "(":
+            cont -= 1
+    idx_f = i
+
+    i = k
+    cont = 0
+    while cont != -1:
+        i -= 1
+        if formula[i] == ")":
+            cont += 1
+        elif formula[i] == "(":
+            cont -= 1
+    idx_i = i
+
+    return idx_i, idx_f
 
 
-formula = "p>q"
-formula = remove_implications(formula)
-print(formula)
+def remove_implies(formula: str) -> str:
+    formula = linter.format(add_brackets(formula))
+    k = 0
+    while ">" in formula:
+        if formula[k] == ">":
+            idx_i, idx_f = get_subformula(formula, k)
+            formula = (
+                formula[:idx_i]
+                + "(-"
+                + formula[idx_i + 1 : k]
+                + "#"
+                + formula[k + 1 : idx_f + 1]
+                + formula[idx_f + 1 :]
+            )
+        k += 1
+
+    return formula
