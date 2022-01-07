@@ -1,5 +1,12 @@
 import string
 
+'''
+    - Atividade de Logica para Computacao.
+    - Autores..: Paulo Henrique Diniz de Lima Alencar, Yan Rodrigues, Alysson Pinheiro.
+    - Professor: Alexandre Arruda.
+'''
+
+
 # Alphabet
 atoms = list(string.ascii_lowercase)
 operatores = ["#", ">", "&", "-"]
