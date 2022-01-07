@@ -1,9 +1,8 @@
-
-'''
+"""
     - Atividade de Logica para Computacao.
     - Autores..: Paulo Henrique Diniz de Lima Alencar, Yan Rodrigues, Alysson Pinheiro.
     - Professor: Alexandre Arruda.
-'''
+"""
 
 # Obtem os indices dos parenteses das subformulas.
 def get_brackets_idx(formula: str, k: int) -> tuple:
@@ -90,80 +89,106 @@ def remove_double_neg(formula: str) -> str:
 
 # Encontra os indices dos conectivos # e &
 def search_connectives_idx(formula, order):
-    if order == 'left':
-        flag = end = step = -1 
+    if order == "left":
+        flag = end = step = -1
     else:
         flag = 1
         end = len(formula)
-        step = 1 
+        step = 1
 
     for i in range(len(formula)):
-        if formula[i] == '#':
+        if formula[i] == "#":
             cont = 0
             for j in range(i, end, step):
-                if formula[j] == '(':
+                if formula[j] == "(":
                     cont += 1
-                elif formula[j] == ')':
+                elif formula[j] == ")":
                     cont -= 1
-                elif formula[j] == '&' and cont == flag:
+                elif formula[j] == "&" and cont == flag:
                     return i, j
-    
-    return None, None 
+
+    return None, None
 
 
 # Step 5 - Distributividade de disjunção '#' sobre conjunção '&' [ok]
 def distributive(formula: str) -> str:
-    
+
     flag = True
-    
-    while flag and ('#(' in formula or ')#' in formula):
-        while '#(' in formula:
-            dis, conj = search_connectives_idx(formula, 'right')
+
+    while flag and ("#(" in formula or ")#" in formula):
+        while "#(" in formula:
+            dis, conj = search_connectives_idx(formula, "right")
             if not (dis and conj):
                 flag = False
                 break
 
-            i_dis,  f_dis  = get_brackets_idx(formula, dis)
+            i_dis, f_dis = get_brackets_idx(formula, dis)
             i_conj, f_conj = get_brackets_idx(formula, conj)
-    
+
             slice1 = formula[:i_dis]
-            slice2 = formula[i_dis+1:dis]
-            slice3 = formula[i_conj+1:conj]
+            slice2 = formula[i_dis + 1 : dis]
+            slice3 = formula[i_conj + 1 : conj]
             slice4 = slice2
-            slice5 = formula[conj+1:f_conj]
-            slice6 = formula[f_dis+1:]
-            formula = slice1 + '((' + slice2 + '#' + slice3 + ')&(' + slice4 + '#' + slice5 + '))' + slice6   
-        
-        while ')#' in formula: 
-            dis, conj = search_connectives_idx(formula, 'left')
+            slice5 = formula[conj + 1 : f_conj]
+            slice6 = formula[f_dis + 1 :]
+
+            formula = (
+                slice1
+                + "(("
+                + slice2
+                + "#"
+                + slice3
+                + ")&("
+                + slice4
+                + "#"
+                + slice5
+                + "))"
+                + slice6
+            )
+
+        while ")#" in formula:
+            dis, conj = search_connectives_idx(formula, "left")
             if not (dis and conj):
                 flag = False
                 break
-            
-            i_dis,  f_dis  = get_brackets_idx(formula, dis)
+
+            i_dis, f_dis = get_brackets_idx(formula, dis)
             i_conj, f_conj = get_brackets_idx(formula, conj)
-            
+
             slice1 = formula[:i_dis]
-            slice2 = formula[i_conj+1:conj]
-            slice3 = formula[dis+1:f_dis]
-            slice4 = formula[conj+1:f_conj]
+            slice2 = formula[i_conj + 1 : conj]
+            slice3 = formula[dis + 1 : f_dis]
+            slice4 = formula[conj + 1 : f_conj]
             slice5 = slice3
-            slice6 = formula[f_dis+1:]
-            formula = slice1 + '((' + slice2 + '#' + slice3 + ')&(' + slice4 + '#' + slice5 + '))' + slice6       
+            slice6 = formula[f_dis + 1 :]
+
+            formula = (
+                slice1
+                + "(("
+                + slice2
+                + "#"
+                + slice3
+                + ")&("
+                + slice4
+                + "#"
+                + slice5
+                + "))"
+                + slice6
+            )
     return formula
 
 
 def to_cnf(formula):
     # Step 1
     updated_formula = remove_implies(formula)
-    
+
     # Step 2
     updated_formula = push_negations(updated_formula)
 
     # Step 3
     updated_formula = remove_double_neg(updated_formula)
-    
+
     # Step 4
     updated_formula = distributive(updated_formula)
-    
-    return updated_formula;
+
+    return updated_formula
