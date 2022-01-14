@@ -96,7 +96,7 @@ def remove_double_neg(formula: str) -> str:
 
 
 # Encontra os indices dos conectivos # e &
-def search_connectives_idx(formula, order):
+def search_connectives_idx(formula: str, order: str) -> tuple:
     if order == "left":
         flag = end = step = -1
     else:
@@ -186,7 +186,7 @@ def distributive(formula: str) -> str:
     return formula
 
 
-def to_cnf(formula):
+def to_cnf(formula: str) -> str:
     # Step 0: remove blank spaces
     # Step 1: remove_implies
     # Step 2: push_negations
