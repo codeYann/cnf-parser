@@ -52,7 +52,7 @@ def lexer_analyzer(formula: str) -> tuple:
 
 
 # Check majors issues
-def verify(curr, next, prev="-") -> bool:
+def verify(curr: str, next: str, prev="-") -> bool:
     if curr == "-":
         if prev in atoms:
             return False
