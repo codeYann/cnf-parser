@@ -9,11 +9,12 @@ formulas = [
     "((p&s)#(q&r))",
     "(p#(q&r))",
     "((q&r)#p)",
+    "(- (p & q))",
 ]
 
-c = 1
-for i in formulas:
-    print(f"{c}. Fomula.......:")
-    print(f"Old formula......: {i}")
-    print(f"New formula (cnf): {cnf.to_cnf(i)}\n\n")
-    c += 1
+count = 1
+for forms in formulas:
+    print(f"{count}. Fomula.......:")
+    print(f"Old formula......: {forms}")
+    print(f"New formula (cnf): {cnf.to_cnf(forms)}\n\n")
+    count += 1
