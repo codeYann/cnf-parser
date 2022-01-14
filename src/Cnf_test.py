@@ -1,7 +1,6 @@
-import Cnf as cnf
+import Cnf as cnf_parser
 
-# Arquivo para testes:
-
+# formulas para testes:
 formulas = [
     "((p#q)>-(q#r))",
     "(-(p&q))",
@@ -16,5 +15,5 @@ count = 1
 for forms in formulas:
     print(f"{count}. Fomula.......:")
     print(f"Old formula......: {forms}")
-    print(f"New formula (cnf): {cnf.to_cnf(forms)}\n\n")
+    print(f"New formula (cnf): {cnf_parser.to_cnf(forms)}\n\n")
     count += 1
