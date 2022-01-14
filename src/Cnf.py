@@ -1,8 +1,16 @@
+import Analyzer as anl
+import functools
+
 """
     - Atividade de Logica para Computacao.
     - Autores..: Paulo Henrique Diniz de Lima Alencar, Yan Rodrigues, Alysson Pinheiro.
     - Professor: Alexandre Arruda.
 """
+
+
+def compoose(*functions):
+    return functools.reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
+
 
 # Obtem os indices dos parenteses das subformulas.
 def get_brackets_idx(formula: str, k: int) -> tuple:
@@ -179,16 +187,14 @@ def distributive(formula: str) -> str:
 
 
 def to_cnf(formula):
-    # Step 1
-    updated_formula = remove_implies(formula)
+    # Step 0: remove blank spaces
+    # Step 1: remove_implies
+    # Step 2: push_negations
+    # Step 3: remove_double_neg
+    # Step 4: distributive
 
-    # Step 2
-    updated_formula = push_negations(updated_formula)
-
-    # Step 3
-    updated_formula = remove_double_neg(updated_formula)
-
-    # Step 4
-    updated_formula = distributive(updated_formula)
-
-    return updated_formula
+    # functions exec orders goes right to left
+    updated_formula = compoose(
+        distributive, remove_double_neg, push_negations, remove_implies, anl.format
+    )
+    return updated_formula(formula)
