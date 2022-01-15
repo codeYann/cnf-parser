@@ -1,9 +1,9 @@
-import Analyzer as anl
+import Analyzer as checker
 import functools
 
 """
-    - Atividade de Logica para Computacao.
-    - Autores..: Paulo Henrique Diniz de Lima Alencar, Yan Rodrigues, Alysson Pinheiro.
+    - Atividade de Lógica para Computação.
+    - Autores: Paulo Henrique Diniz de Lima Alencar, Yan Rodrigues e Alysson Lucas Pinheiro.
     - Professor: Alexandre Arruda.
 """
 
@@ -195,6 +195,6 @@ def to_cnf(formula: str) -> str:
 
     # functions exec orders goes right to left
     updated_formula = compoose(
-        distributive, remove_double_neg, push_negations, remove_implies, anl.format
+        distributive, remove_double_neg, push_negations, remove_implies, checker.format
     )
     return updated_formula(formula)
