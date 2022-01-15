@@ -1,8 +1,8 @@
 import string
 
 """
-    - Atividade de Logica para Computacao.
-    - Autores..: Paulo Henrique Diniz de Lima Alencar, Yan Rodrigues, Alysson Pinheiro.
+    - Atividade de Logica para Computação.
+    - Autores: Paulo Henrique Diniz de Lima Alencar, Yan Rodrigues e Alysson Lucas Pinheiro.
     - Professor: Alexandre Arruda.
 """
 

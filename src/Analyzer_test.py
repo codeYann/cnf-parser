@@ -1,4 +1,4 @@
-import Analyzer as anl
+import Analyzer as checker
 
 formulas = [
     "--p",
@@ -43,4 +43,4 @@ formulas = [
 print("[T/F] | Formula\n--------|---------")
 
 for forms in formulas:
-    print(f"{anl.is_formula(forms)}\t| {forms}")
+    print(f"{checker.is_formula(forms)}\t| {forms}")
