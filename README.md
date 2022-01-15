@@ -1,15 +1,13 @@
-# logic :book: :computer: :surfer:
+# CNF Parser :book: :computer: :surfer:
 
-Implementação do trabalho de lógica.
+## Project details
 
-## Detalhes do projeto
+In this project we built a formula checker and a FNC parser.
 
-Nesse projeto, construímos um analisador de formulas proposicionais e um transformador de formulas proposicinoais quaisquer em formulas normais conjuntivas.
+- [Formula checker](https://github.com/codeYann/logic/blob/main/src/Analyzer.py)
+- [CNF parser](https://github.com/codeYann/logic/blob/main/src/Cnf.py)
 
-- [Analisador de formulas](https://github.com/codeYann/logic/blob/main/src/Analyzer.py)
-- [Transformador de formulas para FNC](https://github.com/codeYann/logic/blob/main/src/Cnf.py)
-
-## Autores
+## Authors
 
 - [Alysson Pinheiro](https://github.com/alyssonlcss)
 - [Paulo Henrique](https://github.com/pauloh-alc)
